@@ -24,7 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.apitestapp.presentation.CharactersListScreen
+import com.example.apitestapp.presentation.DetailsScreen
 import com.example.apitestapp.ui.theme.ApiTestAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,9 +41,32 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            ApiTestAppTheme {
-                CharactersListScreen()
-                //ApiTestAppApp()
+            setContent {
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "home"
+                ) {
+                    composable("home") {
+                        CharactersListScreen(navController = navController)
+                    }
+                    composable(
+                        route = "details/{image}/{description}/{race}/{ki}",
+                        arguments = listOf(
+                            navArgument("image"){type = NavType.StringType},
+                            navArgument("description") { type = NavType.StringType },
+                            navArgument("race") { type = NavType.StringType },
+                            navArgument("ki") { type = NavType.StringType }
+                        )) { backStackEntry ->
+                        val image = backStackEntry.arguments?.getString("image")
+                        val description = backStackEntry.arguments?.getString("description")
+                        val race = backStackEntry.arguments?.getString("race")
+                        val ki = backStackEntry.arguments?.getString("ki")
+                        Log.d("XX", "$image / $description / $race / $ki")
+                        DetailsScreen(image!!, description!!, race!!, ki!!)
+                    }
+                }
             }
         }
     }

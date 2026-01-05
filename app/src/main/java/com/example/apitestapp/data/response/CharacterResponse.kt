@@ -6,12 +6,15 @@ import com.google.gson.annotations.SerializedName
 class CharacterResponse(
     @SerializedName("id") val id:Int,
     @SerializedName("name") val name:String,
-    @SerializedName("image") val image:String
+    @SerializedName("image") val image:String,
+    @SerializedName("description") val description:String,
+    @SerializedName("race") val race:String,
+    @SerializedName("ki") val ki:String
 ){
 
     fun toPresentation(): CharacterModel{
         return CharacterModel(
-            id, name, image
+            id, name, image, description, race, ki
         )
     }
 }
